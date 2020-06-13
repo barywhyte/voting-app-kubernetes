@@ -9,7 +9,7 @@ pipeline {
       }
     stage('Print Directory') {
          steps {
-            sh(script: pwd())
+            sh(script: "echo present directory")
          }
       }
     stage('Say Goodbye') {
