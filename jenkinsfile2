@@ -13,6 +13,18 @@ pipeline {
             sh(script: "ls -l | head -4")
          }
       }
+      stage('Build docker images') {
+         steps {
+            sh(script: "docker images -a")
+            sh(script: """
+               cd azure-vote
+               docker images -a
+               docker build -t docker-pipeline .
+               docker images -a
+               cd ..
+            """)
+         }
+      }
     stage('Say Goodbye') {
          steps {
             echo 'Goodbye to Hello World'
