@@ -1,0 +1,21 @@
+pipeline {
+   agent any
+
+   stages {
+      stage('Verify Git Branch Now') {
+         steps {
+            sh(script: "echo $GIT_BRANCH")
+         }
+      }
+    stage('Print Directory') {
+         steps {
+            sh(script: pwd())
+         }
+      }
+    stage('Say Goodbye') {
+         steps {
+            echo 'Goodbye to Hello World'
+         }
+      }
+   }
+}
