@@ -10,6 +10,7 @@ pipeline {
     stage('Print Directory') {
          steps {
             sh(script: "pwd")
+            sh(script: "ls -l | head -4")
          }
       }
     stage('Say Goodbye') {
