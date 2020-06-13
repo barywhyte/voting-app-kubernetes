@@ -7,7 +7,7 @@ pipeline {
             sh(script: "echo $GIT_BRANCH")
          }
       }
-    stage('Print Directory') {
+      stage('Print Directory') {
          steps {
             sh(script: "pwd")
             sh(script: "ls -l | head -4")
@@ -25,10 +25,36 @@ pipeline {
             """)
          }
       }
-    stage('Say Goodbye') {
+      stage('Start Test App') {
          steps {
-            echo 'Goodbye to Hello World'
+            sh(script: "docker images -a")
+            sh(script: """
+               docker-compose up -d
+            """)
+          post{
+             success {
+               echo "App started successfully :)"
+            }
+            failure {
+               echo "App failed to start :("
+            }
+          }
          }
       }
+      stage('Run Tests') {
+         steps {
+            sh(script: """
+               pytest ./tests/test_sample.py
+            """)
+         }
+      }
+      stage('Stop test app') {
+         steps {
+            sh(script: """
+               docker-compose down
+            """)
+         }
+      }
+
    }
 }
