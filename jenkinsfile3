@@ -1,0 +1,54 @@
+pipeline {
+   agent any
+
+   stages {
+      stage('Verify Git Branch Now') {
+         steps {
+            sh(script: "echo $GIT_BRANCH")
+         }
+      }
+      stage('Print Directory') {
+         steps {
+            sh(script: "pwd")
+            sh(script: "ls -l | head -4")
+         }
+      }
+      stage('Build docker images') {
+         steps {
+            sh(script: "docker images -a")
+            sh(script: """
+               cd azure-vote
+               docker images -a
+               docker build -t docker-pipeline .
+               docker images -a
+               cd ..
+            """)
+         }
+      }
+      stage('Start Test App') {
+         steps {
+            sh(script: "docker images -a")
+            sh(script: "docker-compose up -d")
+         }
+      }
+      
+      stage('Stop test app') {
+         steps {
+            sh(script: "docker-compose down")
+         }
+      }
+      stage("Push Container to dockerhub"){
+          steps{
+             echo "Workspace is $WORKSPACE"
+             dir($WORKSPACE/azure-vote){
+                docker.withRegistry("https://hub.docker.com", "dockerhub"){
+                   def image = docker.build("seunore/initial-push:latest")
+                   image.push()
+                }
+             
+             }
+          }
+      }
+     
+   }
+}
