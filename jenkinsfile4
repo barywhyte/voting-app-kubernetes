@@ -1,0 +1,45 @@
+pipeline {
+   agent any
+
+   stages {
+       stage('Verify Git Branch Now') {
+           steps {
+               sh(script: "echo $GIT_BRANCH")
+         }
+      }
+       stage('Print Directory') {
+           steps {
+               sh(script: "pwd")
+               sh(script: "ls -l | head -4")
+         }
+      }
+       stage('Build docker images') {
+           steps {
+               sh(script: "docker images -a")
+               sh(script: """
+                   cd azure-vote
+                   docker images -a
+                   docker build -t docker-pipeline .
+                   docker images -a
+                   cd ..
+            """)
+         }
+      }
+       stage('Start Test App') {
+           steps {
+               sh(script: "docker images -a")
+               sh(script: "docker-compose up -d")
+         }
+      }
+       stage('Run Trivy'){
+           steps{
+               sh(script: 'trivy seunore/flask-app')
+           }
+       }
+      
+       
+        
+      }
+     
+   }
+}
