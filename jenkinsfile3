@@ -40,7 +40,7 @@ pipeline {
         stage("Push Container to dockerhub"){
             steps{
                 echo "Workspace is $WORKSPACE"
-                dir($WORKSPACE/azure-vote){
+                dir(($WORKSPACE)/azure-vote){
                     script{docker.withRegistry("https://hub.docker.com", "dockerhub"){
                         def image = docker.build("seunore/initial-push:latest")
                         image.push()
