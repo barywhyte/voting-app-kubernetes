@@ -35,10 +35,7 @@ pipeline {
            steps{
                sh(script: 'trivy seunore/flask-app')
            }
-       }
-      
-       
-        
+       } 
       }
      
    }
