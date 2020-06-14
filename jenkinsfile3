@@ -41,9 +41,10 @@ pipeline {
             steps{
                 echo "Workspace is $WORKSPACE"
                 dir($WORKSPACE/azure-vote){
-                    docker.withRegistry("https://hub.docker.com", "dockerhub"){
+                    script{docker.withRegistry("https://hub.docker.com", "dockerhub"){
                         def image = docker.build("seunore/initial-push:latest")
                         image.push()
+                  }
                 }
              
              }
