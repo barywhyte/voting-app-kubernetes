@@ -36,6 +36,12 @@ pipeline {
                sh(script: 'trivy seunore/flask-app')
            }
        } 
+       stage('Run Anchore'){
+           steps{
+               echo "seunore/flask-app" > anchore_images
+               anchore name: 'anchore_images'
+           }
+       }
       }
      
    }
